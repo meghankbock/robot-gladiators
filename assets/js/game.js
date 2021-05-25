@@ -9,33 +9,52 @@
 //var enemyHealth = 50;
 //var enemyAttack = 12;
 
+var fightOrSkip = function () {
+  // ask player if they'd like to fight or run
+  var promptFight = window.prompt(
+    "Would you like to FIGHT or SKIP this batter? Enter 'FIGHT' or 'SKIP' to choose."
+  );
+
+  promptFight = promptFight.toLowerCase();
+
+  if (promptFight === "" || promptFight === null) {
+    window.alert("You need to provide a valid answer! Pleas try again");
+    return fightOrSkip();
+  }
+
+  // if player chooses to "skip" confirm and then stop the loop
+  if (promptFight === "skip") {
+    // confirm player wants to skip
+    var confirmSkip = window.confirm("Are you sure you'd like to quit?");
+
+    // if yes, skip
+    if (confirmSkip) {
+      window.alert(playerInfo.name + " has chosen to skip the flight!");
+      // subtrack money from playerInfo.money for skipping
+      playerInfo.money = playerInfo.money - 10;
+      console.log("playerInfo.money " + playerInfo.money);
+      
+      // return true if player wants to leave
+      return true;
+    }
+    return false;
+  }
+};
+
 var fight = function (enemy) {
   // repeat and execute as long as the enemy-robot is alive
   while (enemy.health > 0 && playerInfo.health > 0) {
+    fightOrSkip();
+
+    if (fightOrSkip()) {
+        // if true, leave fight by breaking loop
+        break;
+    }
+    
     // if the enemy-robot has health points, continue to fight
     // place fight function code block here...
     // alert players that they are starting the round
     // window.alert("Welcome to Robot Gladiators");
-
-    // ask player if they'd like to fight or run
-    var promptFight = window.prompt(
-      "Would you like to FIGHT or SKIP this batter? Enter 'FIGHT' or 'SKIP' to choose."
-    );
-
-    // if player chooses to "skip" confirm and then stop the loop
-    if (promptFight === "skip" || promptFight === "SKIP") {
-      // confirm player wants to skip
-      var confirmSkip = window.confirm("Are you sure you'd like to quit?");
-
-      // if yes, skip
-      if (confirmSkip) {
-        window.alert(playerInfo.name + " has chosen to skip the flight!");
-        // subtrack money from playerInfo.money for skipping
-        playerInfo.money = playerInfo.money - 10;
-        console.log("playerInfo.money " + playerInfo.money);
-        break;
-      }
-    }
 
     // generate random damage value based on player's attack power
     var damage = randomNumber(playerInfo.attack - 3, playerInfo.attack);
@@ -236,16 +255,16 @@ var randomNumber = function (min, max) {
 };
 
 // function to set name
-var getPlayerName = function() {
-    var name = "";
+var getPlayerName = function () {
+  var name = "";
 
-    while (name === "" || name === null) {
-        name = prompt("What is your robot's name?");
-    }
+  while (name === "" || name === null) {
+    name = prompt("What is your robot's name?");
+  }
 
-    console.log("Your robot's name is " + name);
-    return name;
-}
+  console.log("Your robot's name is " + name);
+  return name;
+};
 
 var playerInfo = {
   name: getPlayerName(),
